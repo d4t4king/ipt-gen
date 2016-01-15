@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
-use Config::Simple;
+use Data::Dumper;
+use Term::ANSIColor;
 
+my @tcp_open_ports = qw( 22 25 80 443 );
 
