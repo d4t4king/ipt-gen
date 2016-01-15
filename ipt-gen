@@ -1,10 +1,20 @@
 #!/usr/bin/perl -w
 
+my %tcp_open_ports = ( 
+	'22'	=>	'0.0.0.0/0',
+	'25'	=>	'192.168.1.0/24',
+	'80'	=>	'0.0.0.0/0',
+	'443'	=>	'0.0.0.0/0',
+);
+my %udp_open_ports = (
+	'123'	=>	'0.0.0.0/0',
+);
+my $enable_logging = 1;		# true
+my $enable_loopback = 1;	# true
+
 use strict;
 use warnings;
 
 use Data::Dumper;
 use Term::ANSIColor;
-
-my @tcp_open_ports = qw( 22 25 80 443 );
 
