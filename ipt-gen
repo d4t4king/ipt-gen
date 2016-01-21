@@ -6,6 +6,7 @@
 my @tcp_open_ports = qw( 22 25 80 443 );
 my @udp_open_ports = qw( );
 my $allow_icmp = 0;														#false
+my $allow_icmp_threshold = 0;
 my $log_drops = 1;														#true
 my $allow_loopback = 1;													#true
 ############################################################################
@@ -27,6 +28,18 @@ foreach my $p ( @tcp_open_ports ) {
 }
 foreach my $p ( @udp_open_ports ) {
 	push @rules_list, "$iptables -A INPUT -p udp -m udp --dport $p -j ACCEPT";
+}
+if ($allow_icmp) {
+	if ($allow_icmp_threshold > 0) {
+		push @rules_list, "$iptables -A INPUT -p icmp -m limit --limit $allow_icmp_threshold/sec -j ACCEPT";
+		push @rules_list, "$iptables -A INPUT -p icmp -j DROP";
+	} else {
+		push @rules_list, "$iptables -A INPUT -p icmp -j ACCEPT";
+	}
+}
+if ($allow_loopback) {
+	push @rules_list, "$iptables -A INPUT -i lo -j ACCEPT";
+	push @rules_list, "$iptables -A OUTPUT -o lo -j ACCEPT";
 }
 
 ###########################################################################
