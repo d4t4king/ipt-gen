@@ -1,10 +1,36 @@
 #!/usr/bin/perl -w
 
+############################################################################
+###	BEGIN CONFIG SECTION
+############################################################################
+my @tcp_open_ports = qw( 22 25 80 443 );
+my @udp_open_ports = qw( );
+my $allow_icmp = 0;														#false
+my $log_drops = 1;														#true
+my $allow_loopback = 1;													#true
+############################################################################
+###	END CONFIG SECTION
+############################################################################
+
 use strict;
 use warnings;
 
 use Data::Dumper;
 use Term::ANSIColor;
 
-my @tcp_open_ports = qw( 22 25 80 443 );
+my @rules_list = qw();
+my $iptables = '/sbin/iptables';
+my $ip6tables = '/sbin/ip6tables';
+
+foreach my $p ( @tcp_open_ports ) {
+	push @rules_list, "$iptables -A INPUT -p tcp -m tcp --dport $p -j ACCEPT";
+}
+foreach my $p ( @udp_open_ports ) {
+	push @rules_list, "$iptables -A INPUT -p udp -m udp --dport $p -j ACCEPT";
+}
+
+###########################################################################
+print "These are the rules I have so far: \n";
+print join("\n", @rules_list);
+print "\n";
 
