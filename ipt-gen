@@ -14,7 +14,21 @@ my $enable_loopback = 1;	# true
 
 use strict;
 use warnings;
+no warnings experimental:smartmatch;
 
 use Data::Dumper;
 use Term::ANSIColor;
 
+sub get_existing_rules() {
+	foreach my $line ( `/sbin/iptables-save` ) {
+		chomp($line);
+		given ($line) {
+			when (/^:(.+)/) {
+				my $chain = $1;
+			}
+			default { 
+				print "Unrecognized element: $line \n";
+			}
+		}
+	}
+}
