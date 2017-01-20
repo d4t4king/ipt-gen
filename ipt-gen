@@ -32,7 +32,8 @@ my $logging_limit_period = "sec";
 
 use strict;
 use warnings;
-no warnings experimental:smartmatch;
+use feature qw( switch );
+no if $] >= 5.017011, warnings => 'experimental::smartmatch';
 
 use Data::Dumper;
 use Term::ANSIColor;
